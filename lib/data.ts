@@ -1,3 +1,5 @@
+import { publicAssetPath } from "@/lib/utils";
+
 export const personalInfo = {
   name: "Hameed Khan Mohammad",
   shortName: "HAMEED KHAN",
@@ -12,7 +14,7 @@ export const personalInfo = {
   summary:
     "Software Engineer with 5 years of experience building and supporting enterprise applications, backend services, REST APIs, data-processing pipelines and cloud-native solutions. Strong hands-on experience with Python, FastAPI, Flask, SQL, AWS, React, TypeScript, Apache Airflow and Docker. Experienced in GenAI application development using LLM APIs, prompt engineering, semantic search and RAG concepts.",
   heroTags: ["Python", "Full Stack", "AWS", "GenAI"],
-  photo: "/images/profile.jpg",
+  photo: publicAssetPath("/images/profile.jpg"),
 };
 
 /** Holographic 3D badges around the avatar (intro Frame 09 and the Hero). */

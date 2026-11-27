@@ -1,4 +1,6 @@
-export const AVATAR_MODEL_PATH = "/models/hameed-avatar.glb";
+import { publicAssetPath } from "@/lib/utils";
+
+export const AVATAR_MODEL_PATH = publicAssetPath("/models/hameed-avatar.glb");
 
 export type Vec3 = [number, number, number];
 
@@ -17,9 +19,9 @@ export const avatarConfig = {
   /** Drop your final rigged character here — HameedAvatar loads it automatically. */
   modelDropInPath: "public/models/hameed-avatar.glb",
   /** Self-hosted Draco decoder (copied from three/examples/jsm/libs/draco/gltf). */
-  dracoPath: "/draco/",
-  referenceTexture: "/textures/avatar/reference.jpg",
-  fallbackPortrait: "/images/profile.jpg",
+  dracoPath: publicAssetPath("/draco/"),
+  referenceTexture: publicAssetPath("/textures/avatar/reference.jpg"),
+  fallbackPortrait: publicAssetPath("/images/profile.jpg"),
   /** GLB meshes whose names match get the Matrix-reflection lens material. */
   lensMeshPattern: /lens|glass|sunglass/i,
   /** Final intro frame and the interactive Hero share this framing. */
