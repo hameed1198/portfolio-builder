@@ -44,10 +44,10 @@ export function AvatarLightRig({
       light.target.updateMatrixWorld();
     }
     const level = getLevel ? getLevel() : 1;
-    if (key.current) key.current.intensity = 1.5 * level;
-    if (rimL.current) rimL.current.intensity = (38 + rimBoost * 18) * level;
-    if (rimR.current) rimR.current.intensity = 24 * level;
-    if (fill.current) fill.current.intensity = 0.8 * level;
+    if (key.current) key.current.intensity = 2.1 * level;
+    if (rimL.current) rimL.current.intensity = (16 + rimBoost * 6) * level;
+    if (rimR.current) rimR.current.intensity = 10 * level;
+    if (fill.current) fill.current.intensity = 1.2 * level;
   });
 
   return (
@@ -68,9 +68,9 @@ export function AvatarLightRig({
         shadow-bias={-0.0004}
         shadow-normalBias={0.02}
       />
-      <spotLight ref={rimL} position={[-1.4, 2.9, -2.2]} angle={0.6} penumbra={0.7} intensity={38} color="#00ff88" decay={2} />
-      <spotLight ref={rimR} position={[1.6, 2.4, -2.0]} angle={0.6} penumbra={0.8} intensity={24} color="#00ffcc" decay={2} />
-      <pointLight ref={fill} position={[0.35, 0.95, 1.7]} intensity={0.8} color="#bfffe0" distance={4} decay={2} />
+      <spotLight ref={rimL} position={[-1.4, 2.9, -2.2]} angle={0.6} penumbra={0.7} intensity={16} color="#35d89a" decay={2} />
+      <spotLight ref={rimR} position={[1.6, 2.4, -2.0]} angle={0.6} penumbra={0.8} intensity={10} color="#55c9ad" decay={2} />
+      <pointLight ref={fill} position={[0.35, 0.95, 1.7]} intensity={1.2} color="#ffe0cc" distance={4} decay={2} />
     </group>
   );
 }
@@ -84,8 +84,8 @@ type AvatarLightingProps = {
 export default function AvatarLighting({ hoverBoost = 0, origin, shadows = false }: AvatarLightingProps) {
   return (
     <>
-      <ambientLight intensity={0.12} color="#0d1a12" />
-      <hemisphereLight args={["#3a5a48", "#020403", 0.35]} />
+      <ambientLight intensity={0.22} color="#18201b" />
+      <hemisphereLight args={["#586b5e", "#090a09", 0.42]} />
       <AvatarLightRig origin={origin} shadows={shadows} rimBoost={hoverBoost} />
     </>
   );

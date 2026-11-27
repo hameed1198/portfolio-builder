@@ -18,7 +18,7 @@ type StandInAvatarProps = {
   castShadow?: boolean;
 };
 
-const SKIRT_HEIGHT = 0.62;
+const SKIRT_HEIGHT = 0.46;
 
 type CoatUniforms = {
   uWalk: { value: number };
@@ -76,17 +76,14 @@ transformed = mix(transformed, seatedPos, uSit);`
 }
 
 function makeHairGeometry() {
-  const g = new THREE.IcosahedronGeometry(1, 4);
+  const g = new THREE.SphereGeometry(1, 32, 24);
   const pos = g.attributes.position;
   const v = new THREE.Vector3();
   for (let i = 0; i < pos.count; i++) {
     v.fromBufferAttribute(pos, i);
-    const wave =
-      Math.sin(v.x * 9 + v.z * 4) * 0.5 +
-      Math.sin(v.z * 11 - v.y * 6) * 0.35 +
-      Math.sin((v.x + v.y) * 15) * 0.15;
+    const wave = Math.sin(v.x * 7 + v.z * 3) * 0.45 + Math.sin(v.z * 8 - v.y * 5) * 0.35;
     const top = THREE.MathUtils.smoothstep(v.y, -0.35, 0.45);
-    v.multiplyScalar(1 + wave * 0.07 * top + 0.1 * top);
+    v.multiplyScalar(1 + wave * 0.025 * top + 0.045 * top);
     pos.setXYZ(i, v.x, v.y, v.z);
   }
   g.computeVertexNormals();
@@ -94,13 +91,13 @@ function makeHairGeometry() {
 }
 
 function makeBeardGeometry() {
-  const g = new THREE.IcosahedronGeometry(1, 3);
+  const g = new THREE.SphereGeometry(1, 24, 18);
   const pos = g.attributes.position;
   const v = new THREE.Vector3();
   for (let i = 0; i < pos.count; i++) {
     v.fromBufferAttribute(pos, i);
     const n = Math.sin(v.x * 23 + v.y * 17) * Math.cos(v.z * 19 - v.y * 11);
-    v.multiplyScalar(1 + n * 0.03);
+    v.multiplyScalar(1 + n * 0.012);
     pos.setXYZ(i, v.x, v.y, v.z);
   }
   g.computeVertexNormals();
@@ -150,32 +147,32 @@ export default function StandInAvatar({ controller, lens, castShadow = true }: S
 
   const assets = useMemo(() => {
     const coat = new THREE.MeshPhysicalMaterial({
-      color: "#0d0e0e",
-      roughness: 0.42,
-      clearcoat: 0.5,
-      clearcoatRoughness: 0.35,
+      color: "#202321",
+      roughness: 0.62,
+      clearcoat: 0.18,
+      clearcoatRoughness: 0.55,
     });
     return {
       coat,
       skirt: createCoatSkirtMaterial(coat),
       skin: new THREE.MeshPhysicalMaterial({
-        color: "#8a5a40",
-        roughness: 0.58,
-        sheen: 0.25,
-        sheenRoughness: 0.8,
-        sheenColor: new THREE.Color("#c48a6a"),
+        color: "#b77c60",
+        roughness: 0.72,
+        sheen: 0.18,
+        sheenRoughness: 0.85,
+        sheenColor: new THREE.Color("#d49a78"),
       }),
       hair: new THREE.MeshPhysicalMaterial({
-        color: "#0b0908",
-        roughness: 0.5,
-        sheen: 1,
-        sheenRoughness: 0.4,
-        sheenColor: new THREE.Color("#3a3a3a"),
+        color: "#171311",
+        roughness: 0.68,
+        sheen: 0.45,
+        sheenRoughness: 0.55,
+        sheenColor: new THREE.Color("#554033"),
       }),
-      beard: new THREE.MeshStandardMaterial({ color: "#0c0a09", roughness: 0.85 }),
-      cloth: new THREE.MeshStandardMaterial({ color: "#0a0a0a", roughness: 0.8 }),
-      boots: new THREE.MeshPhysicalMaterial({ color: "#070707", roughness: 0.3, clearcoat: 0.8 }),
-      frame: new THREE.MeshStandardMaterial({ color: "#050505", metalness: 0.7, roughness: 0.25 }),
+      beard: new THREE.MeshStandardMaterial({ color: "#241a16", roughness: 0.82 }),
+      cloth: new THREE.MeshStandardMaterial({ color: "#151817", roughness: 0.82 }),
+      boots: new THREE.MeshPhysicalMaterial({ color: "#111312", roughness: 0.62, clearcoat: 0.18 }),
+      frame: new THREE.MeshStandardMaterial({ color: "#1c201f", metalness: 0.28, roughness: 0.42 }),
       hairGeo: makeHairGeometry(),
       beardGeo: makeBeardGeometry(),
       lensGeo: makeLensGeometry(),
@@ -259,24 +256,24 @@ export default function StandInAvatar({ controller, lens, castShadow = true }: S
   const arm = (side: 1 | -1) => {
     const s = side === 1 ? "L" : "R";
     return (
-      <group name={`j:shoulder${s}`} position={[0.19 * side, 0.2, 0]}>
+      <group name={`j:shoulder${s}`} position={[0.18 * side, 0.19, 0]}>
         <mesh position={[0, -0.15, 0]} material={assets.coat} {...shadow}>
-          <capsuleGeometry args={[0.056, 0.2, 6, 14]} />
+          <capsuleGeometry args={[0.049, 0.2, 8, 18]} />
         </mesh>
         <group name={`j:elbow${s}`} position={[0, -0.3, 0]}>
           <mesh position={[0, -0.13, 0]} material={assets.coat} {...shadow}>
-            <capsuleGeometry args={[0.048, 0.18, 6, 14]} />
+            <capsuleGeometry args={[0.042, 0.18, 8, 18]} />
           </mesh>
           <group name={`j:wrist${s}`} position={[0, -0.27, 0]}>
-            <mesh position={[0, -0.05, 0]} scale={[1, 1, 0.62]} material={assets.skin} {...shadow}>
-              <capsuleGeometry args={[0.03, 0.05, 4, 10]} />
+            <mesh position={[0, -0.09, 0]} scale={[0.72, 1, 0.55]} material={assets.skin} {...shadow}>
+              <sphereGeometry args={[0.045, 16, 12]} />
             </mesh>
             <mesh
-              position={[-0.022 * side, -0.03, 0.012]}
+              position={[-0.03 * side, -0.08, 0.01]}
               rotation={[0, 0, 0.5 * side]}
               material={assets.skin}
             >
-              <capsuleGeometry args={[0.011, 0.03, 4, 8]} />
+              <capsuleGeometry args={[0.009, 0.028, 6, 10]} />
             </mesh>
           </group>
         </group>
@@ -325,22 +322,18 @@ export default function StandInAvatar({ controller, lens, castShadow = true }: S
               {[1, -1].map((side) => (
                 <mesh
                   key={side}
-                  position={[0.055 * side, 0.12, 0.108]}
-                  rotation={[0.05, 0, 0.32 * side]}
+                  position={[0.045 * side, 0.12, 0.105]}
+                  rotation={[0.05, 0, 0.24 * side]}
                   material={assets.coat}
                 >
-                  <boxGeometry args={[0.05, 0.24, 0.012]} />
+                  <boxGeometry args={[0.032, 0.19, 0.01]} />
                 </mesh>
               ))}
-              {/* Standing collar */}
-              <mesh position={[0, 0.3, -0.005]} material={assets.skirt}>
-                <cylinderGeometry args={[0.085, 0.105, 0.09, 20, 1, true, 0.5, Math.PI * 2 - 1.0]} />
-              </mesh>
               {[1, -1].map((side) => (
                 <mesh
                   key={`pad${side}`}
-                  position={[0.19 * side, 0.22, 0]}
-                  scale={[1, 0.75, 0.9]}
+                  position={[0.17 * side, 0.2, 0]}
+                  scale={[0.72, 0.55, 0.7]}
                   material={assets.coat}
                   {...shadow}
                 >
@@ -363,18 +356,36 @@ export default function StandInAvatar({ controller, lens, castShadow = true }: S
                   </mesh>
                   {/* Full beard + jaw */}
                   <mesh
-                    position={[0, -0.005, 0.018]}
-                    scale={[0.09, 0.07, 0.098]}
+                    position={[0, -0.035, 0.048]}
+                    scale={[0.085, 0.054, 0.072]}
                     geometry={assets.beardGeo}
                     material={assets.beard}
                     {...shadow}
                   />
-                  <mesh position={[0, 0.034, 0.104]} rotation={[0, 0, Math.PI / 2]} material={assets.beard}>
-                    <capsuleGeometry args={[0.011, 0.045, 4, 8]} />
+                  <mesh position={[0, 0.038, 0.106]} scale={[0.82, 1.15, 0.9]} material={assets.skin}>
+                    <sphereGeometry args={[0.022, 16, 12]} />
                   </mesh>
-                  <mesh position={[0, 0.055, 0.1]} scale={[0.8, 1.2, 1]} material={assets.skin}>
-                    <sphereGeometry args={[0.02, 12, 10]} />
-                  </mesh>
+                  {[-1, 1].map((side) => (
+                    <mesh
+                      key={`moustache${side}`}
+                      position={[0.015 * side, 0.006, 0.111]}
+                      rotation={[0, 0, -0.18 * side]}
+                      scale={[1, 0.65, 0.55]}
+                      material={assets.beard}
+                    >
+                      <sphereGeometry args={[0.022, 14, 10]} />
+                    </mesh>
+                  ))}
+                  {[-1, 1].map((side) => (
+                    <mesh
+                      key={`brow${side}`}
+                      position={[0.033 * side, 0.094, 0.098]}
+                      rotation={[0, 0, 0.08 * side]}
+                      material={assets.hair}
+                    >
+                      <capsuleGeometry args={[0.006, 0.026, 4, 10]} />
+                    </mesh>
+                  ))}
                   {[1, -1].map((side) => (
                     <mesh
                       key={`ear${side}`}
@@ -387,16 +398,16 @@ export default function StandInAvatar({ controller, lens, castShadow = true }: S
                   ))}
                   {/* Dark wavy hair with volume on top */}
                   <mesh
-                    position={[0, 0.13, -0.012]}
-                    scale={[0.1, 0.095, 0.11]}
+                    position={[0, 0.145, -0.012]}
+                    scale={[0.101, 0.08, 0.108]}
                     geometry={assets.hairGeo}
                     material={assets.hair}
                     {...shadow}
                   />
                   <mesh
-                    position={[0.02, 0.19, 0.05]}
-                    rotation={[0.5, 0.3, 0.2]}
-                    scale={[0.05, 0.03, 0.05]}
+                    position={[0.018, 0.205, 0.045]}
+                    rotation={[0.35, 0.2, 0.12]}
+                    scale={[0.04, 0.018, 0.045]}
                     geometry={assets.hairGeo}
                     material={assets.hair}
                   />
